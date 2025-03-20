@@ -16,26 +16,33 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+enum SortOrder {
+  Length,
+  Alphabetical,
+  None,
+}
 interface FormInitialValues {
   items: string[];
   isReverse: boolean;
-  sortByLength: boolean;
-  sortByAlph: boolean;
+  // sortByLength: boolean;
+  // sortByAlph: boolean;
+  sortOrder: SortOrder;
   reset: boolean;
 }
 
 const formInitialValues: FormInitialValues = {
   items: goodsFromServer,
   isReverse: false,
-  sortByLength: false,
-  sortByAlph: false,
+  // sortByLength: false,
+  // sortByAlph: false,
+  sortOrder: SortOrder.None,
   reset: false,
 };
 
 export const App: React.FC = () => {
   const [foodItems, setFoodItems] = useState(formInitialValues);
 
-  const sortByLength = (isReverse: boolean) => () => {
+  const sortItemsByLength = (isReverse: boolean) => () => {
     const localItems = [...foodItems.items];
 
     const sortedItems = localItems.sort((a, b) => {
@@ -57,7 +64,7 @@ export const App: React.FC = () => {
     });
   };
 
-  const sortByAlph = (isReverse: boolean) => () => {
+  const sortItemsAlphabetically = (isReverse: boolean) => () => {
     const localItems = [...foodItems.items];
 
     const sortedItems = localItems.sort((a, b) => {
@@ -79,7 +86,7 @@ export const App: React.FC = () => {
     });
   };
 
-  const reverse = () => {
+  const reverseItems = () => {
     setFoodItems(prev => {
       const newItems = [...prev.items].reverse();
       const isInitial = newItems.join() === goodsFromServer.join();
@@ -93,7 +100,7 @@ export const App: React.FC = () => {
     });
   };
 
-  const reset = () => {
+  const resetItems = () => {
     setFoodItems(() => ({ ...formInitialValues }));
   };
 
@@ -101,7 +108,7 @@ export const App: React.FC = () => {
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={sortByAlph(foodItems.isReverse)}
+          onClick={sortItemsAlphabetically(foodItems.isReverse)}
           type="button"
           className={`button ${foodItems.sortByAlph ? 'is-info' : 'is-light'}`}
         >
@@ -109,7 +116,7 @@ export const App: React.FC = () => {
         </button>
 
         <button
-          onClick={sortByLength(foodItems.isReverse)}
+          onClick={sortItemsByLength(foodItems.isReverse)}
           type="button"
           className={`button ${foodItems.sortByLength ? 'is-success' : 'is-light'}`}
         >
@@ -117,7 +124,7 @@ export const App: React.FC = () => {
         </button>
 
         <button
-          onClick={reverse}
+          onClick={reverseItems}
           type="button"
           className={`button ${foodItems.isReverse ? 'is-warning' : 'is-light'}`}
         >
@@ -125,7 +132,11 @@ export const App: React.FC = () => {
         </button>
 
         {foodItems.reset && (
-          <button onClick={reset} type="button" className="button is-danger">
+          <button
+            onClick={resetItems}
+            type="button"
+            className="button is-danger"
+          >
             Reset
           </button>
         )}
